@@ -5,4 +5,5 @@ import 'package:fpdart/fpdart.dart';
 abstract interface class SendMoodRepo {
   Future<Either<FailureError, SendMoodResponse>> sendMoodTrackerData(
       {required String description});
+  Future<Either<FailureError, List<SendMoodResponse>>> getMoodsFromLocal();
 }

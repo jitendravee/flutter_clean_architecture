@@ -7,3 +7,5 @@ final class SendMoodTrackerData extends ModeTrakerEvent {
   final String description;
   SendMoodTrackerData({required this.description});
 }
+
+final class GetMoodsListEvent extends ModeTrakerEvent {}

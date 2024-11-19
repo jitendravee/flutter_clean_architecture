@@ -11,6 +11,14 @@ class SendMoodDataModel extends SendMoodResponse {
           .toList(),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'scored_labels': scoredLabels
+          .map((label) => (label as SentimentLabelModel).toJson())
+          .toList(),
+    };
+  }
 }
 
 class SentimentLabelModel extends SentimentLabel {
