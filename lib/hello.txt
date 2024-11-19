@@ -1,0 +1,184 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+class ModeTrackerPage extends StatefulWidget {
+  const ModeTrackerPage({super.key});
+
+  @override
+  State<ModeTrackerPage> createState() => _ModeTrackerPageState();
+}
+
+class _ModeTrackerPageState extends State<ModeTrackerPage> {
+  final TextEditingController descriptionController = TextEditingController();
+  String mood = "😊"; // Default mood
+  String responseMessage = ""; // OpenAI
+  final String baseUrl = "https://api.nlpcloud.io/v1";
+  final String modelName =
+      "distilbert-base-uncased-emotion"; // Replace with your desired model name
+  final String apiToken =
+      "0cf8d9dc619b77ac668ec13bd01f07c48143e51f"; // Replace with your actual API token
+
+  Future<String> analyzeSentiment(String text) async {
+    final url = Uri.parse("$baseUrl/$modelName/sentiment");
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          "Authorization": "Token $apiToken",
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode({"text": text}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final scoredLabels = data["scored_labels"] as List<dynamic>;
+
+        if (scoredLabels.isNotEmpty) {
+          final sentiment = scoredLabels.first["label"];
+          final score = scoredLabels.first["score"];
+          return "Sentiment: $sentiment (Confidence: ${(score * 100).toStringAsFixed(2)}%)";
+        } else {
+          return "No sentiment detected.";
+        }
+      } else {
+        return "Error: ${response.reasonPhrase}";
+      }
+    } catch (e) {
+      return "An error occurred: $e";
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Colors.blue, Colors.purple, Colors.orange],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                const SizedBox(height: 50),
+                Text(
+                  'Track Your Mood Journey',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w700,
+                    foreground: Paint()
+                      ..shader = const LinearGradient(
+                        colors: [Colors.yellow, Colors.orange, Colors.red],
+                      ).createShader(const Rect.fromLTWH(0.0, 0.0, 300.0, 0.0)),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        // Mood Selector
+                        DropdownButton<String>(
+                          value: mood,
+                          items: [
+                            "😊",
+                            "😔",
+                            "😎",
+                            "🥱",
+                            "😠",
+                          ]
+                              .map((mood) => DropdownMenuItem<String>(
+                                    value: mood,
+                                    child: Text(
+                                      mood,
+                                      style: const TextStyle(fontSize: 24),
+                                    ),
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              mood = value!;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        // Description Input
+                        TextField(
+                          controller: descriptionController,
+                          maxLines: 3,
+                          decoration: const InputDecoration(
+                            labelText: "Describe your mood",
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        // Submit Button
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              analyzeSentiment(
+                                descriptionController.text,
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.purple,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                            ),
+                            child: const Text(
+                              "Analyze Mood",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        // Display Response
+                        Text(
+                          responseMessage,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

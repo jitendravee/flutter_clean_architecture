@@ -1,8 +1,8 @@
+import 'package:clean_architecture/features/mode/presentation/pages/mood_tracker_home_page.dart';
 import 'package:clean_architecture/features/movie/data/datasources/movie_remote_data_source.dart';
 import 'package:clean_architecture/features/movie/data/repositories/movie_repository_impl.dart';
 import 'package:clean_architecture/features/movie/domain/usecases/movie_fetch.dart';
 import 'package:clean_architecture/features/movie/presentaion/bloc/movie_bloc.dart';
-import 'package:clean_architecture/features/movie/presentaion/pages/movie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MoviePage(),
+      home: const MoodTrackerHomePage(),
     );
   }
 }
