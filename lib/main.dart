@@ -1,3 +1,7 @@
+import 'package:clean_architecture/features/mode/data/datasources/send_mood_data_source.dart';
+import 'package:clean_architecture/features/mode/data/repository/send_mood_data_repo_impl.dart';
+import 'package:clean_architecture/features/mode/domain/usecases/send_mood_data.dart';
+import 'package:clean_architecture/features/mode/presentation/bloc/mode_traker_bloc.dart';
 import 'package:clean_architecture/features/mode/presentation/pages/mood_tracker_home_page.dart';
 import 'package:clean_architecture/features/movie/data/datasources/movie_remote_data_source.dart';
 import 'package:clean_architecture/features/movie/data/repositories/movie_repository_impl.dart';
@@ -9,6 +13,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 void main() {
   runApp(MultiBlocProvider(
     providers: [
+      BlocProvider(
+          create: (_) => ModeTrakerBloc(
+              sendMoodData: SendMoodData(
+                  SendMoodDataRepoImpl(SendMoodDataSourceImpl())))),
       BlocProvider(
           create: (_) => MovieBloc(
               movieFetch:

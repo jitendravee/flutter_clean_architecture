@@ -13,7 +13,7 @@ class MoodSlider extends StatefulWidget {
 }
 
 class _MoodSliderState extends State<MoodSlider> {
-  double currentSliderValue = 3;
+  double currentSliderValue = 2;
   final List<String> moodEmojis = ["😔", "😕", "😐", "😊", "😄"];
   final List<String> moodLabels = ["Sad", "Meh", "Neutral", "Happy", "Excited"];
 
