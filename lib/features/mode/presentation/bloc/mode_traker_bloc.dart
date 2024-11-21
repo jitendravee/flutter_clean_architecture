@@ -3,7 +3,6 @@ import 'package:clean_architecture/core/usecases/usercase.dart';
 import 'package:clean_architecture/features/mode/domain/entities/send_mood_response.dart';
 import 'package:clean_architecture/features/mode/domain/usecases/get_moods.dart';
 import 'package:clean_architecture/features/mode/domain/usecases/send_mood_data.dart';
-import 'package:clean_architecture/features/movie/presentaion/bloc/movie_bloc.dart';
 import 'package:meta/meta.dart';
 
 part 'mode_traker_event.dart';
